@@ -22,8 +22,20 @@ class Adaline_neuron(object):
         return np.dot(inputs, self.weights)
 
     def predict(self, x_test) -> np.ndarray:
-        return np.where(self.activation(x_test) >= 0.5, 1, -1)
+        tempX = x_test.copy()
+        tempX[35] = 1
+        pred = []
+        for i in range(tempX.shape[0]):
+            xi = tempX.loc[i]
+            xi = np.array([xi])
+            ans = self.activation(xi[0])
+            pred.append(ans)
+        pred = np.array([pred])
+        return np.where(pred[0] >= 0.5, 1, -1)
 
     def score(self, x_test, y_test):
-        output = self.predict(x_test) - y_test
+        # print(self.predict(x_test).transpose()[0])
+        y_test = np.array(y_test.values)
+        # print(y_test.transpose()[0])
+        output = self.predict(x_test) - y_test[0]
         return len(output[output == 0]) / len(y_test)
